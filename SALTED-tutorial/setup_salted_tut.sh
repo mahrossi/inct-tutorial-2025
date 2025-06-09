@@ -5,7 +5,7 @@ echo "Running this script directly will exit after this warning."
 exit 1
 
 # setup conda env basic packages
-conda create -n salted_tut python=3.10 numpy scipy matplotlib scikit-learn pandas tqdm ipython ipykernel nb_conda_kernels tqdm sympy pyyaml "mpi4py=3.1.4" "ase>=3.23" "spglib>=2.5.0" "phonopy>=2.9.3" "click>=7.1.2" "pytest>=6.2.3" elastic meson ninja -y
+conda create -n salted_tut python=3.10 numpy scipy matplotlib scikit-learn pandas tqdm ipython ipykernel nb_conda_kernels jupyterlab_rise tqdm sympy pyyaml "mpi4py=3.1.4" "ase>=3.23" "spglib>=2.5.0" "phonopy>=2.9.3" "click>=7.1.2" "pytest>=6.2.3" elastic meson ninja -y
 # other packages
 conda install py3dmol ipywidgets -y
 conda activate salted_tut
