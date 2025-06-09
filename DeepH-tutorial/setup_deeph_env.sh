@@ -1,5 +1,8 @@
-echo "WARNING: please copy-paste and run in terminal line by line, for better dealing with corner cases"
-exit
+#!/bin/bash
+echo "WARNING: This script contains commands that should be run individually."
+echo "Please copy-paste each command into your terminal one by one to handle potential errors."
+echo "Running this script directly will exit after this warning."
+exit 1
 
 ### setup conda env
 ## has to be 3.9, the last python version that pytorch 1.9.1 supports
