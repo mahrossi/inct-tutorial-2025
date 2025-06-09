@@ -1,0 +1,90 @@
+(deeph_tut) zekunlou@cfelm-pcx65042:~/Dropbox/CNPEM-Tutorial/deeph-minimal/1.H2O/2.train$ bash train.sh 
+Loading train config from: train.ini
+
+------- DeepH-E3 model training begins -------
+Output will be stored under: test_save_dir/2025-06-03_14-58-53_test_zl
+Using random seed: 42
+Data type during training: torch.float32
+Saved DeepH-E3 source code to output dir
+
+------- Preparation of training data -------
+
+Processing graph data...
+Graph data file: HGraph-h2o-rFromDFT-edge=Aij.pkl
+Process new data file......
+Looking for preprocessed data under: collect_preprocessed
+Found 4999 structures, have cost 0 seconds
+100%|##########| 4999/4999 [00:14<00:00, 337.85it/s]
+Finish processing 4999 structures, have cost 14 seconds
+Finished saving 4999 structures to save_graph_dir, have cost 0 seconds
+Finish loading the processed 4999 structures (spinful: False, the number of atomic types: 2), cost 0.02 seconds
+
+Automatically generated target and net_out_irreps. 
+Details saved to: test_save_dir/2025-06-03_14-58-53_test_zl/targets.txt
+
+Setting mask for dataset...
+Finished setting mask for dataset, cost 16.69 seconds
+
+------- Data loader for training -------
+size of train set: 2999
+size of val set: 999
+size of test set: 999
+Batch size: 64
+
+------- Build model -------
+Building model...
+Finished building model, cost 13.88 seconds.
+The model you built has 721563 parameters.
+Output constructer associated to net.
+
+===== DeepH-E3 model structure: =====
+using spherical harmonics: 1x0e+1x1o+1x2e+1x3o+1x4e
+=== layer 0 ===
+node update: (64x0e -> 64x0e+32x1o+16x2e+8x3o+8x4e)
+edge update: (64x0e -> 64x0e+32x1o+16x2e+8x3o+8x4e)
+=== layer 1 ===
+node update: (64x0e+32x1o+16x2e+8x3o+8x4e -> 64x0e+32x1o+16x2e+8x3o+8x4e)
+edge update: (64x0e+32x1o+16x2e+8x3o+8x4e -> 64x0e+32x1o+16x2e+8x3o+8x4e)
+=== layer 2 ===
+node update: (64x0e+32x1o+16x2e+8x3o+8x4e -> 64x0e+32x1o+16x2e+8x3o+8x4e)
+edge update: (64x0e+32x1o+16x2e+8x3o+8x4e -> 15x0e+18x1o+6x1e+6x2o+16x2e+12x3o+6x3e+2x4o+6x4e+2x5o+1x5e+1x6e)
+=== output ===
+output node: (1x0e)
+output edge: (1x0e+1x0e+1x0e+1x1o+1x0e+1x0e+1x0e+1x1o+1x0e+1x0e+1x0e+1x1o+1x1o+1x1o+1x1o+1x0e+1x1e+1x2e+1x1o+1x2e+1x3o+1x1o+1x2e+1x3o+1x1o+1x2e+1x3o+1x0e+1x1e+1x2e+1x1o+1x2o+1x3o+1x2e+1x3e+1x4e+1x1o+1x1o+1x1o+1x0e+1x1e+1x2e+1x2e+1x2e+1x2e+1x1o+1x2o+1x3o+1x3o+1x3o+1x3o+1x2e+1x3e+1x4e+1x0e+1x1e+1x2e+1x1o+1x2o+1x3o+1x2e+1x3e+1x4e+1x1o+1x2o+1x3o+1x0e+1x1e+1x2e+1x3e+1x4e+1x1o+1x2o+1x3o+1x4o+1x5o+1x2e+1x3e+1x4e+1x1o+1x2o+1x3o+1x4o+1x5o+1x0e+1x1e+1x2e+1x3e+1x4e+1x5e+1x6e)
+
+------- Preparation for training -------
+Using optimizer Adam with initial lr=0.002, betas=(0.9, 0.999)
+Loss type: MSE over all matrix elements
+Tensorboard recorder initialized
+Using pytorch scheduler ReduceLROnPlateau
+Starting new training process
+
+------- Begin training -------
+====================
+Epoch #0      | Time: 00d 00h 00m  | LR: 2.00e-03  | Epoch time:  39.71  | Train loss: 2.84e+02  | Val loss: 2.40e+02
+Target 000 has maximum loss 2.27e+04; Target 043 has minimum loss 4.51e-02
+====================
+Epoch #1      | Time: 00d 00h 01m  | LR: 2.00e-03  | Epoch time:  35.18  | Train loss: 2.14e+02  | Val loss: 1.88e+02
+Target 000 has maximum loss 1.80e+04; Target 045 has minimum loss 1.67e-02
+====================
+Epoch #2      | Time: 00d 00h 01m  | LR: 2.00e-03  | Epoch time:  32.55  | Train loss: 1.61e+02  | Val loss: 1.33e+02
+Target 000 has maximum loss 1.28e+04; Target 046 has minimum loss 7.49e-03
+====================
+Epoch #3      | Time: 00d 00h 02m  | LR: 2.00e-03  | Epoch time:  34.29  | Train loss: 1.06e+02  | Val loss: 7.85e+01
+Target 000 has maximum loss 7.56e+03; Target 046 has minimum loss 6.48e-03
+====================
+Epoch #4      | Time: 00d 00h 03m  | LR: 2.00e-03  | Epoch time:  37.23  | Train loss: 5.66e+01  | Val loss: 3.65e+01
+Target 000 has maximum loss 3.41e+03; Target 045 has minimum loss 5.10e-03
+====================
+Epoch #5      | Time: 00d 00h 03m  | LR: 2.00e-03  | Epoch time:  34.60  | Train loss: 2.38e+01  | Val loss: 1.36e+01
+Target 000 has maximum loss 1.10e+03; Target 045 has minimum loss 3.56e-03
+====================
+Epoch #6      | Time: 00d 00h 04m  | LR: 2.00e-03  | Epoch time:  37.83  | Train loss: 8.60e+00  | Val loss: 4.96e+00
+Target 000 has maximum loss 2.79e+02; Target 045 has minimum loss 2.85e-03
+====================
+Epoch #7      | Time: 00d 00h 04m  | LR: 2.00e-03  | Epoch time:  36.62  | Train loss: 3.31e+00  | Val loss: 2.09e+00
+Target 000 has maximum loss 7.52e+01; Target 045 has minimum loss 2.19e-03
+
+
+
+
