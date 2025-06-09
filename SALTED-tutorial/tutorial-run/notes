@@ -1,0 +1,6 @@
+1) I had to comment out the prediction block to start the procedure. script breaks otherwise
+2) geometries to train are not periodic anymore, so I had to remove the k-grid 111 part of control.in
+3) Chagend QMDIR in run-aims.sbatch to QMDIR='./'
+4) had to comment out blocksize because I am running in serial
+5) Code is checking whether prediction directory exists even when it does not exist, but it should just create it! Right now I need to create the folder not to get an error in make_geoms --predict
+6) I had to remove cd - from aims predict first loop. Updated script is run-aims-predict.sh
