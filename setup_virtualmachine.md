@@ -1,80 +1,179 @@
-# README
+# VirtualBox Setup Guide for Atomistic Simulations and FHI-aims
 
-This guide walks you through creating and configuring a VirtualBox VM for building and testing FHI-aims on Debian/Ubuntu hosts. It covers both creating a VM from scratch and importing from an existing OVA appliance.
+This comprehensive guide walks you through creating and configuring a VirtualBox virtual machine (VM) for building, testing, and running FHI-aims calculations and atomistic simulation tutorials. The guide is designed for complete beginners who have never used VirtualBox before.
 
-> TODO: add conda environment yaml files for each tutorial, and add instructions for installing conda environments.
+## Overview
 
-## Install Virtual Box
+You have two options for setting up your VM:
+1. **Create from scratch** - Build everything yourself (recommended for learning)
+2. **Import existing appliance** - Use a pre-configured OVA file (faster setup)
 
-VirtualBox 7.x installed via your distribution package manager or from the [download page](https://www.virtualbox.org/wiki/Downloads).
-I chose `Debian-based Linux distributions` on [this page](https://www.virtualbox.org/wiki/Linux_Downloads) and it works well for MPSD linux laptops (Debian 12).
+Both approaches are covered in this guide.
 
-## Setup Virtual Machine from Scratch
+## Prerequisites and Initial Setup
 
-If you have got the OVA file, you can skip this section.
+### 1. Install VirtualBox
 
-The Image is `Ubuntu 22.04 Jammy Jellyfish` from [osboxes](https://www.osboxes.org/ubuntu/), and I chose `vdi` format.
+Download and install VirtualBox 7.x from the [official download page](https://www.virtualbox.org/wiki/Downloads):
 
-### 1.Load Image
+- For **Linux users**: Choose "Debian-based Linux distributions" from the [Linux Downloads page](https://www.virtualbox.org/wiki/Linux_Downloads) (works well for MPSD Linux laptops running Debian 12)
+- For **Windows/Mac users**: Download the appropriate installer from the main download page
 
-Enter Virtual Box.
+### 2. Download LLubuntu Image
 
-Option `New`:
+Download Lubuntu 22.04 Jammy Jellyfish from [osboxes](https://www.osboxes.org/lubuntu/):
+- Look for "Lubuntu 22.04 Jammy Jellyfish"
+- Download the **VDI format** file
+- You'll get a `64bit.7z` compressed file
+- Extract it to get the `.vdi` file in the `64bit/` folder
 
-```text
-Name=FHIaims_VM
-Folder=/home/zekunlou/Projects/virtualbox/fhi-aims_250504_2
-ISO Image=<not selected>
-Type=Linux
-Subtype=Ubuntu
-Version=Ubuntu 22.04 LTS (Jammy Jellyfish) (64-bit)
+**Important**: Make a backup copy of the original VDI file, as it might be overwritten during VM operations.
+
+## Method 1: Creating VM from Scratch
+
+### Step 1: Create New Virtual Machine
+
+1. Open Oracle VirtualBox
+2. Click **"New"** to create a new VM
+3. Fill in the following settings:
+
+**Name and Operating System:**
+- Name: `SAbIA-Virtual-Machine` (or `FHIaims_VM`)
+- Folder: Choose your preferred location (e.g., `/home/username/VirtualBox VMs/`)
+- ISO Image: Leave empty (`<not selected>`)
+- Type: `Linux`
+- Subtype: `Lubuntu`
+- Version: `Lubuntu 22.04 LTS (Jammy Jellyfish) (64-bit)`
+
+4. Click **"Next"**
+
+**Hardware Configuration:**
+- Memory size: `4096 MB` (4 GB RAM)
+- Processor(s): `4` (adjust based on your system)
+
+5. Click **"Next"**
+
+**Hard Disk:**
+- Select **"Use an existing virtual hard disk file"**
+- Click the folder icon and navigate to your extracted `.vdi` file
+- Select the `Lubuntu 22.04 (64bit).vdi` file
+
+6. Click **"Finish"**
+
+### Step 2: Enable Virtualization (If Needed)
+
+When you first start the VM, you might encounter an error message:
+```
+AMD-V is disabled in the BIOS (or by the host OS) (VERR_SVM_DISABLED)
 ```
 
-Click `Next`.
+**To fix this:**
+1. Restart your computer and enter BIOS/UEFI settings (usually by pressing F2, F12, or Del during boot)
+2. Look for virtualization settings (AMD-V, Intel VT-x, or similar)
+3. Enable virtualization support
+4. Save and exit BIOS
 
-```text
-Memory size=4096 MB
-Processor(s)=4
-```
+**Note**: The exact procedure varies by manufacturer. Search online for your specific laptop model + "enable virtualization" for detailed instructions.
 
-Click `Next`.
+### Step 3: First Boot and Login
 
-```text
-Use an existing virtual hard disk file
-Location=/home/zekunlou/Projects/virtualbox/fhi-aims_250504_2/64bit/Ubuntu 22.04 (64bit).vdi
-(decompressed from osboxes 7z file)
-```
+1. Right-click on your VM in the VirtualBox manager
+2. Select **"Start"**
+3. Wait for Lubuntu to boot
+4. Login with:
+   - **Username**: `osboxes`
+   - **Password**: `osboxes.org`
 
-Then a clean virtual machine appliance is created.
+**Useful Keyboard Shortcuts:**
+- **Host+F**: Exit full-screen mode (Host key = Right Ctrl)
+- **Host+A**: Auto-adjust window size
+- **Host+C**: Scale mode toggle
 
-### 2.Setup FHI-aims
+## Setting Up Shared Folders
 
-Start the VM. Login with `username=osboxes`, `password=osboxes.org`.
+Shared folders allow you to easily transfer files between your host computer and the VM.
 
-Follow section `Add Shared Folder` below to share files between host and guest.
+### Step 1: Create Local Shared Folder
+Create a folder on your host computer called `shared_folder` (or any name you prefer).
 
-Install everything
+### Step 2: Configure Shared Folder in VM
+1. In the VM window, go to **Devices** → **Shared Folders** → **Shared Folder Settings...**
+2. Click the **folder with plus sign** button
+3. Configure:
+   - **Folder Path**: Select your local `shared_folder`
+   - **Folder Name**: Leave default or customize
+   - **Mount Point**: `/home/osboxes/shared_folder`
+   - **Check**: Auto-mount
+   - **Check**: Make Permanent
+4. Click **"OK"**
+5. **Reboot the VM** to apply changes
+
+### Step 3: Access Shared Files
+After reboot, you can access shared files at:
+- `/home/osboxes/shared_folder` (preferred mount point)
+- `/media/sf_shared_folder` (alternative location)
+
+**Set proper permissions** for transferred files:
 ```bash
+sudo chown -R osboxes:osboxes <target_file_or_folder>
+chmod -R 755 <target_file_or_folder>  # Use 755 instead of 777 for security
+```
+
+## Installing Software and Dependencies
+
+### Step 1: System Updates and Cleanup
+
+```bash
+# Update package lists
 sudo apt-get update
-# Purge all LibreOffice components
+
+# Remove unnecessary desktop applications to save space
 sudo apt-get purge --auto-remove libreoffice-* -y
-# Remove Thunderbird
 sudo apt-get purge --auto-remove thunderbird -y
-# Remove a few other desktop-only apps (adjust as you like)
 sudo apt-get purge --auto-remove \
     shotwell aisleriot gnome-sudoku gnome-mahjongg \
-    ubuntu-report popularity-contest apport -y
-# Finally, clean up residuals
+    Lubuntu-report popularity-contest apport -y
+
+# Clean up residuals
 sudo apt-get autoremove --purge
 sudo apt-get clean
-# Install useful packages
-sudo apt-get install -y build-essential gfortran gcc g++ cmake ninja-build pkg-config mpi-default-bin mpi-default-dev libscalapack-mpi-dev libblas-dev liblapack-dev git wget curl vim tmux tree less python3 python3-pip  # around 2 min
 ```
 
-> Optional: install VS Code and other applications if you would like.
+### Step 2: Install Development Tools
 
-File `initial_cache.vm_gnu.cmake`:
+```bash
+# Install essential development packages (~2 minutes)
+sudo apt-get install -y \
+    build-essential gfortran gcc g++ \
+    cmake ninja-build pkg-config \
+    mpi-default-bin mpi-default-dev \
+    libscalapack-mpi-dev libblas-dev liblapack-dev \
+    git wget curl vim tmux tree less \
+    python3 python3-pip
 ```
+
+### Step 3: Install Conda (Miniforge)
+
+1. Download Miniforge for Linux:
+```bash
+wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+```
+
+2. Install with default settings:
+```bash
+bash Miniforge3-Linux-x86_64.sh
+```
+
+3. Follow the installation prompts (accept defaults)
+4. Restart your terminal or run `source ~/.bashrc`
+
+## Setting Up FHI-aims
+
+### Step 1: Create Build Configuration
+
+Create a file called `initial_cache.vm_gnu.cmake`:
+
+```cmake
 set(CMAKE_Fortran_COMPILER mpifort CACHE STRING "" FORCE)
 set(CMAKE_Fortran_FLAGS "-O2 -fallow-argument-mismatch -ffree-line-length-none" CACHE STRING "" FORCE)
 set(Fortran_MIN_FLAGS "-O0 -ffree-line-length-none" CACHE STRING "" FORCE)
@@ -91,96 +190,131 @@ set(USE_HDF5 OFF CACHE BOOL "" FORCE)
 set(USE_RLSY ON CACHE BOOL "" FORCE)
 ```
 
-File `build.sh`:
+### Step 2: Create Build Script
+
+Create a file called `build.sh`:
+
 ```bash
+#!/bin/bash
 BUILD_DIR=build_vm_gnu
 INITIAL_CACHE_FNAME=initial_cache.vm_gnu.cmake
 
 if [ -d "${BUILD_DIR}" ]; then
-	rm -r ${BUILD_DIR}
+    rm -r ${BUILD_DIR}
 fi
 mkdir ${BUILD_DIR}
 cd ${BUILD_DIR}
 cmake -C ../${INITIAL_CACHE_FNAME} ..
-make -j 2
+make -j 4
 ```
 
-Then run the test case `H2O-relaxation` and `testcase_water_RI`.
+### Step 3: Build FHI-aims
 
-Move FHI-aims executable to `/home/osboxes/aims.250425.scalapack.mpi.x`
-
-### 3.Install `conda`
-
-You can find the [download link to `Linux/x86_64`](https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh) in the [Download page for miniforge](https://conda-forge.org/download/).
-Just follow the default steps to install it.
-
-### 4.Zero and Defragment Disk
-
-> **TODO:** if image size is too large, we can try out other ways, or seek for help from MPSD SSU team.
-
-Suggested by LLM
 ```bash
-sudo dd if=/dev/zero of=zerofile bs=1M; sudo rm zerofile`
+chmod +x build.sh
+./build.sh
+```
+Then you should find the FHI-aims executable in the `build_vm_gnu` directory.
+
+### Step 4: Test Installation
+
+Run test cases:
+- `H2O-relaxation`
+- `testcase_water_RI`
+
+Move the FHI-aims executable to a convenient location:
+```bash
+cp build_vm_gnu/aims.*.x /home/osboxes/aims.scalapack.mpi.x
 ```
 
-Also see [this page](https://superuser.com/questions/529149/how-to-compact-virtualboxs-vdi-file-size) and [this page](https://docs.oracle.com/en/virtualization/virtualbox/6.0/user/vboxmanage-modifymedium.html).
+## Method 2: Using Pre-configured OVA Appliance
 
+If you have access to a pre-configured OVA file, follow these steps:
 
-### 5.Export OVA File
+### Step 1: Import OVA File
 
-Before Export, remove FHI-aims code and `.git` folder, also clean `apt` cache and `conda` cache.
+1. Start VirtualBox
+2. Go to **Tools** → **Import**
+3. In page **Appliance to Import**, select your `.ova` file, then click **Next**
+4. In **Appliance settings**:
+   - Change **Machine Base Folder** to your preferred location, e.g., the same folder as the OVA file
+   - Adjust other settings as needed
+5. Click **"Import"** and wait (~1 minute)
+
+### Step 2: Configure Imported VM
+
+1. The imported VM will appear in your VirtualBox manager
+2. Follow the **Shared Folders** setup from the previous section
+3. Boot the VM and login with provided credentials
+    - Username: `osboxes.org`
+    - Password: `osboxes.org`
+
+## Optimizing and Maintaining Your VM
+
+### Disk Space Management
+
+**Clean system caches regularly:**
 ```bash
 sudo apt-get clean
 conda clean --all
 ```
 
-Then in Virtual Box, select the VM, then `File` -> `Export Appliance...`.
-The exported `ova` file name is `FHIaims_VM.ova`.
-
-### 6.Compress OVA File
-
-First `tar -xzf FHIaims_VM.ova` and we get
-- `FHIaims_VM.ovf`: descriptor
-- `FHIaims_VM-disk001.vmdk`: disk image, largest, to be compressed
-- `FHIaims_VM.mf`: manifest with checksums
-
+**Zero free space before exporting** (optional, for smaller OVA files):
 ```bash
-VBoxManage clonehd FHIaims_VM-disk001.vmdk FHIaims_VM-disk001.vdi --format VDI
-# this takes about 2 min, vmdk 11G -> vdi 20G, we shall check other ways to compress the disk image...
+sudo dd if=/dev/zero of=/home/osboxes/zerofile bs=1M
+sudo rm /home/osboxes/zerofile
 ```
 
-## Load Virtual Machine from Existing Appliance
+### Exporting Your Configured VM
 
-### 1.Load Existing OVA File
+To share your configured VM:
 
-Start Virtual Box, select `Tools`, then select `Import`.
-In page `Appliance to import` blanck `File`, select `/path/to/image.ova`, then click `Next`.
-In page `Appliance settings`, you can change `Machine Base Folder` to your perferred location (e.g. the same folder as the `ova` file). Click `Finish`.
-Wait ~ 1 min for importing the appliance, you will see a new folder `<VM_name>`.
-Boot the virtual machine. User name is `osboxes`, password is `<password>`.
+1. Clean up temporary files and caches
+2. Remove sensitive data
+3. In VirtualBox: **File** → **Export Appliance...**
+4. Choose your VM and export as OVA format
+5. Optionally compress the resulting OVA file
 
-### 2.Add Shared Folder
+### Performance Tips
 
-[Document](https://docs.oracle.com/en/virtualization/virtualbox/6.0/user/sharedfolders.html)
+- **Allocate sufficient RAM**: At least 4GB, more if running large calculations
+- **Enable hardware acceleration**: Ensure virtualization is enabled in BIOS
+- **Use SSD storage**: Store VM files on SSD for better performance
+- **Adjust processor cores**: Allocate 2-4 cores depending on your system
 
-Create a folder locally called `shared_folder` for file sharing between host and guest (the virtual machine).
-In the guest window, open `Devices` -> `Shared Folders` -> `Shared Folder Settings...`.
-Click the button of a folder and a plus sign.
-For `Folder path`, select the local folder `shared_folder`.
-For `Mount point`, input `/home/osboxes/shared_folder`.
-Check `Auto-mount`. Then click `OK`.
-Reboot the virtual machine to make the changes take effect if you don't see the folder.
-It is also available at `/media/sf_shared_folder`, and this is also the folder we will use to share files between host and guest.
+## Troubleshooting Common Issues
 
-Then you can transfer files between host and guest, and remember `chown` and `chmod`.
+### VM Won't Start
+- Check if virtualization is enabled in BIOS
+- Verify sufficient RAM is available
+- Ensure VDI file path is correct
 
-```bash
-sudo chown -R osboxes:osboxes <target_file_or_folder>
-chmod -R 777 <target_file_or_folder>
-```
+### Slow Performance
+- Increase allocated RAM and CPU cores
+- Enable 3D acceleration in VM settings
+- Close unnecessary applications on host
 
-### 3.Prepare Conda Environments
+### Shared Folders Not Working
+- Install VirtualBox Guest Additions
+- Reboot VM after configuring shared folders
+- Check folder permissions
 
-`miniforge` is installed. YML files for environments setup is suggested.
-See [Create an environment from an environment.yml file](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file) and [Exporting the environment.yml file](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#exporting-the-environment-yml-file).
+### Build Errors
+- Verify all dependencies are installed
+- Check compiler paths in CMake configuration
+- Ensure MPI libraries are properly linked
+
+## Next Steps
+
+Once your VM is configured:
+
+1. **Run tutorial exercises** using the prepared environments
+2. **Practice with sample calculations** to verify everything works
+3. **Backup your configured VM** for future use
+4. **Share the OVA file** with colleagues for consistent tutorial environments
+
+## Additional Resources
+
+- [VirtualBox Documentation](https://docs.oracle.com/en/virtualization/virtualbox/)
+- [FHI-aims Documentation](https://fhi-aims-club.gitlab.io/tutorials/)
 
