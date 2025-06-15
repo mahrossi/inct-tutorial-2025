@@ -38,12 +38,12 @@ Download Lubuntu 22.04 Jammy Jellyfish from [osboxes](https://www.osboxes.org/lu
 3. Fill in the following settings:
 
 **Name and Operating System:**
-- Name: `SAbIA-Virtual-Machine` (or `FHIaims_VM`)
+- Name: `cnpem_2025`
 - Folder: Choose your preferred location (e.g., `/home/username/VirtualBox VMs/`)
 - ISO Image: Leave empty (`<not selected>`)
 - Type: `Linux`
-- Subtype: `Lubuntu`
-- Version: `Lubuntu 22.04 LTS (Jammy Jellyfish) (64-bit)`
+- Subtype: `Ubuntu`
+- Version: `Ubuntu 22.04 LTS (Jammy Jellyfish) (64-bit)`
 
 4. Click **"Next"**
 
@@ -106,7 +106,7 @@ Create a folder on your host computer called `shared_folder` (or any name you pr
    - **Check**: Auto-mount
    - **Check**: Make Permanent
 4. Click **"OK"**
-5. **Reboot the VM** to apply changes
+5. If everything works out, you should see the shared folder mounted at the home directory. You don't have to reboot.
 
 ### Step 3: Access Shared Files
 After reboot, you can access shared files at:
@@ -151,21 +151,6 @@ sudo apt-get install -y \
     git wget curl vim tmux tree less \
     python3 python3-pip
 ```
-
-### Step 3: Install Conda (Miniforge)
-
-1. Download Miniforge for Linux:
-```bash
-wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
-```
-
-2. Install with default settings:
-```bash
-bash Miniforge3-Linux-x86_64.sh
-```
-
-3. Follow the installation prompts (accept defaults)
-4. Restart your terminal or run `source ~/.bashrc`
 
 ## Setting Up FHI-aims
 
@@ -256,7 +241,6 @@ If you have access to a pre-configured OVA file, follow these steps:
 **Clean system caches regularly:**
 ```bash
 sudo apt-get clean
-conda clean --all
 ```
 
 **Zero free space before exporting** (optional, for smaller OVA files):
