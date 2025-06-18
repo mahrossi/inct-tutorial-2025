@@ -2,11 +2,9 @@
 ### Description: run FHI-aims prediction calculations for test dataset
 
 ### Prepare vars
-# AIMS=/Users/rossi/Codes/FHIaims/build_2025/aims.250507.serial.x
-AIMS=/home/zekunlou/Projects/FHI_aims/FHIaims_250320/bin/aims.250320.scalapack.mpi.gnu_debian_worklaptop.date_250601.x
+# AIMS=...  # already in ~/.bashrc
 ROOTDIR=$(realpath .)
-# DATADIR=${ROOTDIR}/pred_data
-DATADIR=${ROOTDIR}/pred_data_zl_test
+DATADIR=${ROOTDIR}/pred_data
 cd ${ROOTDIR}
 
 ### Prepare calculation dirs and files
