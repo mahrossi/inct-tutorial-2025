@@ -23,7 +23,7 @@ for (( i=1; i<=$n; i++ )); do
 	cd ${DATADIR}/$i
 	cp ri_restart_coeffs_predicted.out ri_restart_coeffs.out
 	mpirun -np 1 $AIMS < /dev/null > aims_predict.out && mv rho_rebuilt_ri.out rho_ml.out &
-	rm ri_restart_coeffs.out  # remove the restart coeffs file to avoid confusion
 	wait
+	rm ri_restart_coeffs.out  # remove the restart coeffs file to avoid confusion
 	cd ${DATADIR}
 done
