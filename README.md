@@ -8,3 +8,8 @@ Switch to the repo root directory and run:
 ```bash
 jupyter lab --notebook-dir=.
 ```
+
+## Requirements for individual tutorials
+
+
+
